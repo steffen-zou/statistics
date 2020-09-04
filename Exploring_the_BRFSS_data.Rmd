@@ -1,0 +1,237 @@
+---
+title: "Exploring the BRFSS data"
+output: 
+  html_document: 
+    fig_height: 4
+    highlight: pygments
+    theme: spacelab
+---
+
+## Setup
+
+### Load packages
+
+```{r load-packages, message = FALSE}
+library(ggplot2)
+library(dplyr)
+```
+
+### Load data
+
+```{r load-data}
+load("brfss2013.RData")
+```
+
+
+
+* * *
+
+## Part 1: Data
+
+The observations in the sample are collected via surveys conducted via calls to both landlines and cell phones numbers in all 50 states of the United States of America, as well as the District of Columbia and three U.S. territories.
+
+The landline and cell phone numbers are generated at random using Random Digit Dialing (RDD) techniques. Because the there is random sampling done, the result of the analysis can be generalized to the population of interest. 
+
+Because there is no random assignment done, the result of the analysis cannot be used for causal inference. 
+
+* * *
+
+## Part 2: Research questions
+
+**Research quesion 1: What is the most common chronic health condition that people have been told that they have?** 
+
+Knowing about this can help us be careful to avoid getting the most common chronic health condition.
+
+
+**Research quesion 2: For arthritis management where doctor suggest to lose weight, what is the typical weight?**
+
+Knowing that weight will motivate us to be careful about our weight to avoid getting arthritis due to body weight.
+
+
+**Research quesion 3: What is the top 10 types of exercise with the least percentage of people being told that they have chronic health condition?**
+
+Knowing this information may motivate us to participate in one of these types of exercise.
+
+* * *
+
+## Part 3: Exploratory data analysis
+
+
+**Research quesion 1: What is the most common chronic health condition that people have been told that they have?** 
+
+```{r}
+chronic_cond <- brfss2013 %>% 
+  summarise(
+    heart_attack = sum(cvdinfr4 == 'Yes', na.rm = TRUE)
+    , angina_or_chd = sum(cvdcrhd4 == 'Yes', na.rm = TRUE)
+    , stroke = sum(cvdstrk3 == 'Yes', na.rm = TRUE)
+    , asthma = sum(asthma3 == 'Yes', na.rm = TRUE)
+    , skin_cancer = sum(chcscncr == 'Yes', na.rm = TRUE)
+    , other_cancer = sum(chcocncr == 'Yes', na.rm = TRUE)
+    , copd = sum(chccopd1 == 'Yes', na.rm = TRUE)
+    , arthritis = sum(havarth3 == 'Yes', na.rm = TRUE)
+    , depressive_disorder = sum(addepev2 == 'Yes', na.rm = TRUE)
+    , kidney_disease = sum(chckidny == 'Yes', na.rm = TRUE)
+    , diabetes = sum(diabete3 == 'Yes', na.rm = TRUE)
+    )
+
+chronic_cond
+```
+
+To make the summary statistics easier to interpret, I will rotate the table counterclockwise, and sort them by their count in descending order.
+
+```{r}
+chronic_cond <- as.data.frame(t(chronic_cond))
+
+colnames(chronic_cond) <- c('count')
+
+chronic_cond <- chronic_cond %>% 
+  mutate(condition_type = rownames(chronic_cond)) %>% 
+  arrange(desc(count)) %>% 
+  select(condition_type, count)
+
+chronic_cond
+```
+
+From the summary statistics, it shows that arthritis is the most common chronic health condition that people have been told that they have.
+
+I will generate a bar plot for better understanding.
+
+```{r}
+chronic_cond$condition_type <- factor(
+                                  chronic_cond$condition_type
+                                  , levels = chronic_cond$condition_type[order(chronic_cond$count)]
+                                  )
+ggplot(data = chronic_cond, aes(x = count, y = condition_type)) + 
+  geom_bar(stat = 'identity') +
+  ggtitle('Most common chronic health condition that people have been told \nthat they have') +
+  xlab('Count') +
+  ylab('Type of condition') +
+  scale_x_continuous(labels = NULL
+                     , lim = c(0, 180000)) +
+  theme(axis.ticks.x = element_blank()
+        , axis.ticks.y = element_blank()
+        , panel.grid = element_blank()) +
+  geom_text(aes(label = format(count, big.mark = ","))
+            , hjust = -0.1, size = 3)
+```
+
+
+**Research quesion 2: For arthritis management where doctor suggest to lose weight, what is the typical weight?**
+
+```{r}
+having_arthritis <- brfss2013 %>% filter(arthwgt == 'Yes')
+
+having_arthritis <- having_arthritis %>% 
+  mutate(weight2_num = as.numeric(as.character(weight2)))
+
+having_arthritis %>% 
+  summarise(
+    average_weight = mean(weight2_num, na.rm = TRUE)
+    , standard_deviation = sd(weight2_num, na.rm = TRUE)
+    , max_weight = max(weight2_num, na.rm = TRUE)
+    )
+```
+
+From the summary statistics, it shows that the average weight for people having arthritis due to weight is 216 pounds. The standard deviation of 156 pounds is very large, so there should be an outlier, which is confirmed by the max weight of 9077 pounds.
+
+I will generate a histogram so that it the outlier is more obvious shown by the limit on the X axis.
+
+```{r}
+ggplot(data=having_arthritis, aes(x=weight2_num)) + 
+  geom_histogram(binwidth = 20) + 
+  ggtitle('Distribution of weights of the people having arthritis due to weight') +
+  xlab('Weight (pound)') +
+  ylab('Count') +
+  scale_x_continuous(labels = function(x) format(x, big.mark = ",",
+                                                       scientific = FALSE))
+```
+
+
+```{r}
+quantile(having_arthritis$weight2_num, c(0.25, 0.5, 0.75), na.rm = TRUE)
+```
+
+So to be more accurate on the typical weight of the people who have arthritis due to weight, it is the middle 50% of the weights, which is from 180 pounds (i.e. 25th percentile) to 240 pounds (i.e. 75th percentile).
+
+I will generate a histogram with limit on the X axis to exclude the outlier.
+
+```{r}
+ggplot(data=having_arthritis, aes(x=weight2_num)) + 
+  geom_histogram(binwidth = 20) + 
+  ggtitle('Distribution of weights of the people having arthritis due to weight') +
+  xlab('Weight (pound)') +
+  ylab('Count') +
+  scale_x_continuous(lim = c(0, 600))
+```
+
+
+**Research quesion 3: What is the top 10 types of exercise with the least percentage of people being told that they have chronic health condition?**
+
+```{r}
+brfss2013 <- brfss2013 %>% 
+  mutate(told_have_chronic_cond=ifelse(
+                                   cvdinfr4 == 'Yes' 
+                                   | cvdcrhd4 == 'Yes' 
+                                   | cvdstrk3 == 'Yes'
+                                   | asthma3 == 'Yes'
+                                   | chcscncr == 'Yes'
+                                   | chcocncr == 'Yes'
+                                   | chccopd1 == 'Yes'
+                                   | havarth3 == 'Yes'
+                                   | addepev2 == 'Yes'
+                                   | chckidny == 'Yes'
+                                   | diabete3 == 'Yes'
+                                   , 'Yes', 'No'
+                                   )
+         ) 
+
+exercise_and_chr_cond <- brfss2013 %>% 
+  filter(
+    told_have_chronic_cond %in% c('Yes', 'No')
+    , !is.na(exract11)) %>% 
+  group_by(exract11) %>% 
+  summarise(
+    percent_told_have_chronic_cond = sum(told_have_chronic_cond == 'Yes') / n()
+    ) %>%
+  rename(exercise_type = exract11) %>%
+  arrange(percent_told_have_chronic_cond)
+
+top_10_exercise_types <- head(exercise_and_chr_cond, 10)
+top_10_exercise_types
+```
+
+The above summary statistics shows the top 10 types of exercise with the least percentage of people being told that they have chronic health condition. It shows that most of them are high intensity exercise.
+
+I will generate a bar plot for better understanding.
+
+```{r}
+top_10_exercise_types$exercise_type <- factor(
+                                    top_10_exercise_types$exercise_type
+                                    , levels = top_10_exercise_types$exercise_type[order(top_10_exercise_types$percent_told_have_chronic_cond, decreasing=TRUE)]
+                                  )
+
+ggplot(data=top_10_exercise_types
+       , aes(x=percent_told_have_chronic_cond
+             , y=exercise_type)) + 
+  geom_bar(stat = 'identity') + 
+  ggtitle('Top 10 types of exercise with the least percentage of people being told \nthat they have chronic health condition') +
+  xlab('Percent told they have chronic health condition') +
+  ylab('Type of exercise') +
+  geom_text(aes(label = round(percent_told_have_chronic_cond, digits = 3))
+            , hjust = -0.2, size = 3) +
+  scale_x_continuous(labels = NULL, lim = c(0, 0.4)) +
+  theme(axis.ticks = element_blank()
+        , panel.grid = element_blank())
+```
+
+I will also do a summary statistics of the top 10 types of exercise with the most percentage of people being told that they have chronic health condition, so that you can compare the percentages from both statistics.
+
+```{r}
+bottom_10_exercise_types <- exercise_and_chr_cond %>% 
+  arrange(desc(percent_told_have_chronic_cond)) %>%
+  head(n=10)
+
+bottom_10_exercise_types
+```
+
