@@ -28,9 +28,11 @@ load("brfss2013.RData")
 
 ## Part 1: Data
 
+The [Behavioral Risk Factor Surveillance System (BRFSS)](https://www.cdc.gov/brfss/index.html) is a system of health-related telephone surveys that collect state data about U.S. residents regarding their health-related risk behaviors, chronic health conditions, and use of preventive services.
+
 The observations in the sample are collected via surveys conducted via calls to both landlines and cell phones numbers in all 50 states of the United States of America, as well as the District of Columbia and three U.S. territories.
 
-The landline and cell phone numbers are generated at random using Random Digit Dialing (RDD) techniques. Because the there is random sampling done, the result of the analysis can be generalized to the population of interest. 
+The landline and cell phone numbers are generated at random using Random Digit Dialing (RDD) techniques. Because there is random sampling done, the result of the analysis can be generalized to the population of interest. 
 
 Because there is no random assignment done, the result of the analysis cannot be used for causal inference. 
 
