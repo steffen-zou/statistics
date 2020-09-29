@@ -1,5 +1,3 @@
-# statistics
-
 <a href="https://github.com/steffen-zou/statistics/blob/master/Exploring_the_BRFSS_data.Rmd">
   Exploring_the_BRFSS_data.Rmd
 </a>
