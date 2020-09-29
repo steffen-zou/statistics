@@ -27,7 +27,7 @@
 
 <ul>
   <li>
-    In this project, I worked with the General Social Survey (GSS) data to answer the following question:
+    In this project, I used statistical inference on the General Social Survey (GSS) data to answer the following question:
     <ul>
       <li>
         Is the median family income in constant dollars different between year 2012 and 2000?
