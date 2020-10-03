@@ -17,9 +17,7 @@
   </li>
 </ul>
 
-<a href="https://github.com/steffen-zou/statistics/blob/master/stat_inf_with_GSS_data.Rmd">
-  stat_inf_with_GSS_data.Rmd
-</a>
+<a href="https://github.com/steffen-zou/statistics/blob/master/stat_inf_with_GSS_data.Rmd">stat_inf_with_GSS_data.Rmd</a> | <a href="https://github.com/steffen-zou/statistics/blob/master/stat_inf_with_GSS_data.pdf">stat_inf_with_GSS_data.pdf</a>
 
 <ul>
   <li>
