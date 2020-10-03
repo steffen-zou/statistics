@@ -1,7 +1,8 @@
 ---
 title: "Exploring the BRFSS data"
-output: 
-  html_document: 
+output:
+  pdf_document: default
+  html_document:
     fig_height: 4
     highlight: pygments
     theme: spacelab
@@ -100,13 +101,15 @@ From the summary statistics, it shows that arthritis is the most common chronic 
 I will generate a bar plot for better understanding.
 
 ```{r}
-chronic_cond$condition_type <- factor(
-                                  chronic_cond$condition_type
-                                  , levels = chronic_cond$condition_type[order(chronic_cond$count)]
-                                  )
+chronic_cond$condition_type <- 
+  factor(
+    chronic_cond$condition_type
+    , levels = chronic_cond$condition_type[order(chronic_cond$count)]
+    )
 ggplot(data = chronic_cond, aes(x = count, y = condition_type)) + 
   geom_bar(stat = 'identity') +
-  ggtitle('Most common chronic health condition that people have been told \nthat they have') +
+  ggtitle('Most common chronic health condition that people have been
+told that they have') +
   xlab('Count') +
   ylab('Type of condition') +
   scale_x_continuous(labels = NULL
@@ -208,16 +211,23 @@ The above summary statistics shows the top 10 types of exercise with the least p
 I will generate a bar plot for better understanding.
 
 ```{r}
-top_10_exercise_types$exercise_type <- factor(
-                                    top_10_exercise_types$exercise_type
-                                    , levels = top_10_exercise_types$exercise_type[order(top_10_exercise_types$percent_told_have_chronic_cond, decreasing=TRUE)]
-                                  )
+top_10_exercise_types$exercise_type <- 
+  factor(
+    top_10_exercise_types$exercise_type
+    , levels = top_10_exercise_types$exercise_type[
+        order(
+        top_10_exercise_types$percent_told_have_chronic_cond
+        , decreasing=TRUE
+        )
+      ]
+    )
 
 ggplot(data=top_10_exercise_types
        , aes(x=percent_told_have_chronic_cond
              , y=exercise_type)) + 
   geom_bar(stat = 'identity') + 
-  ggtitle('Top 10 types of exercise with the least percentage of people being told \nthat they have chronic health condition') +
+  ggtitle('Top 10 types of exercise with the least percentage of people being
+told that they have chronic health condition') +
   xlab('Percent told they have chronic health condition') +
   ylab('Type of exercise') +
   geom_text(aes(label = round(percent_told_have_chronic_cond, digits = 3))
