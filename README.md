@@ -29,3 +29,16 @@
     </ul>
   </li>
 </ul>
+
+<a href="https://github.com/steffen-zou/statistics/blob/master/reg_model_for_movies.Rmd">reg_model_for_movies.Rmd</a> | <a href="https://github.com/steffen-zou/statistics/blob/master/reg_model_for_movies.pdf">reg_model_for_movies.pdf</a>
+
+<ul>
+  <li>
+    In this project, I used modeling on the data of a sample of movies to answer the following question:
+    <ul>
+      <li>
+        What are the components of a popular movie?
+      </li>
+    </ul>
+  </li>
+</ul>
