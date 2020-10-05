@@ -1,0 +1,284 @@
+---
+title: "Modeling and prediction for movies"
+output:
+  pdf_document: default
+  html_document:
+    fig_height: 4
+    highlight: pygments
+    theme: spacelab
+---
+
+## Setup
+
+### Load packages
+
+```{r load-packages, message = FALSE}
+library(ggplot2)
+library(dplyr)
+library(statsr)
+library(GGally)
+```
+
+### Load data
+
+```{r load-data}
+load("movies.Rdata")
+```
+
+
+
+* * *
+
+## Part 1: Data
+
+The dataset includes information from [Rotten Tomatoes](https://www.rottentomatoes.com/) and [IMDb](https://www.imdb.com/) for a random sample of movies produced and released before 2016.
+
+Because random sampling was used, the result of the analysis can be generalized to the movies.
+
+Because random assignment is not used, the result of the analysis cannot be used for causal inference.
+
+* * *
+
+## Part 2: Research question
+
+**What are the components of a popular movie?**
+
+Knowing the components of a popular movie can help movie producers to focus on the important things when making a movie, to improve the likelihood of the movie being popular.
+
+* * *
+
+## Part 3: Exploratory data analysis
+
+```{r warning=FALSE}
+ggpairs(movies, columns = c(4, 7, 8, 13, 16, 18))
+```
+
+The pairs plot shows that audience_score and imdb_rating have strong linear relationship. I can use either of them as response variable of the model.
+
+```{r message=FALSE}
+movies %>% 
+  group_by(genre) %>% 
+  summarise(lower_quartile = quantile(imdb_rating, probs = 0.25)
+            , median_imdb_rating = median(imdb_rating)
+            , upper_quartile = quantile(imdb_rating, probs = 0.75)
+            ) %>% 
+  arrange(desc(median_imdb_rating))
+```
+
+From this summary statistics, it shows that the genres "Musical & Performing Arts" and Documentary have much higher median IMDb rating than other genres.
+
+```{r warning=FALSE}
+ggplot(data = movies, aes(x = runtime, y = imdb_rating)) + 
+  geom_jitter() +
+  ggtitle('Relationship between runtime and IMDb rating') +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab('Runtime') +
+  ylab('IMDb rating')
+```
+
+From this scatter plot, it shows that movies with runtime beyond 150 minutes is associated with higher IMDb rating.
+
+```{r}
+ggplot(data = movies, aes(x = mpaa_rating, y = imdb_rating)) + 
+  geom_boxplot() +
+  ggtitle('IMDb rating of different MPAA ratings') +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab('MPAA rating') +
+  ylab('IMDb rating')
+```
+
+From this box plot, it shows that the MPAA ratings "G" and "Unrated" have higher median IMDb rating than the other MPAA ratings.
+
+```{r}
+ggplot(data = movies, aes(x = best_dir_win, y = imdb_rating)) + 
+  geom_boxplot() +
+  ggtitle('IMDb rating of movies whether or not the director ever won an Oscar') +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab('IMDb rating') +
+  xlab('Whether or not the director of the movie ever won an Oscar')
+```
+
+From this box plot, it shows that movies which the director ever won an Oscar having higher minimum IMDb rating and higher median IMDb rating.
+
+* * *
+
+## Part 4: Modeling
+
+#### Variables To Consider For Full Model
+
+I will consider the following variables for the full model:
+
+* response variable
+  + imdb_rating
+
+* explanatory variables
+  + genre
+  + runtime
+  + mpaa_rating
+  + thtr_rel_month
+  + best_dir_win
+
+#### Model Selection
+
+Because I am interested in knowing the components of a popular movie, I will use the p-value approach for model selection to find out which variables are significant. I will use backwards elimination as it will take shorter time than forward selection when doing the p-value approach.
+
+```{r}
+# re-level so that the coefficient of each level will be easier to interpret
+movies$mpaa_rating <- relevel(movies$mpaa_rating, ref = 'PG-13')
+movies$genre <- relevel(movies$genre, ref = 'Animation')
+```
+
+**Step 1**
+```{r}
+m_movies <- lm(imdb_rating ~ genre + runtime + mpaa_rating + 
+                 thtr_rel_month + best_dir_win
+               , data = movies)
+summary(m_movies)
+```
+
+Because the variable thtr_rel_month is not significant (i.e. p-value above significance level 0.05), and has the highest p-value, I will remove it from the model and refit the smaller model.
+
+**Step 2**
+```{r}
+m_movies <- lm(imdb_rating ~ genre + runtime + mpaa_rating + best_dir_win
+               , data = movies)
+summary(m_movies)
+```
+
+Because all the 4 variables are significant (i.e. p-value below significance level 0.05), I will stop here.
+
+#### Model Diagnostics
+
+I will now check whether the following conditions are met for the multiple linear regression model to be valid:
+
+* Linear relationships between (numerical) x and y
+* Nearly normal residuals with mean 0
+* Constant variability of residuals
+* Independent residuals
+
+**Linear relationships between (numerical) x and y**
+
+```{r}
+filtered_movies <- movies %>% 
+  filter(!is.na(genre), !is.na(runtime))
+
+ggplot(data = filtered_movies
+       , aes(x = runtime, y = m_movies$residuals)) + 
+  geom_jitter() +
+  geom_hline(yintercept = 0, linetype = 'dashed') +
+  ggtitle('Residuals vs. runtime') +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab('Residuals')
+```
+
+From this residuals plot, it shows that there are random scatter around 0, which means that the numerical explanatory variable is linearly related to the response variable.
+
+**Nearly normal residuals with mean 0**
+
+```{r}
+ggplot(data = m_movies, aes(x = .resid)) + 
+  geom_histogram(binwidth = 0.5) +
+  ggtitle('Histogram of residuals') +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab('Residuals')
+```
+
+From the histogram, it shows that the distribution has a slight skew to the left, but quite normal and centered at 0.
+
+```{r}
+ggplot(data = m_movies, aes(sample = .resid)) + 
+  stat_qq() +
+  stat_qq_line() +
+  ggtitle('Normal probability plot of residuals') +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+From the normal probability plot, other than the slight deviation at the left tail, the line looks mostly straight, indicating that the residuals are mostly normally distributed.
+
+**Constant variability of residuals**
+
+```{r}
+ggplot(data = m_movies, aes(x = .fitted, y = .resid)) + 
+  geom_jitter() +
+  geom_hline(yintercept = 0, linetype = 'dashed') +
+  ggtitle('Residuals vs. fitted') +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+From the plot, it shows that the random scatter of residuals are concentrated around 0. Other than the few residuals below -2, the variability looks constant around 0.
+
+**Independent residuals**
+
+```{r message=FALSE}
+movies %>% 
+  group_by(thtr_rel_year) %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(thtr_rel_year)) %>%
+  top_n(n = 10)
+```
+
+The data are random sampled, and the sizes of sample without replacement each year are less than 10% of the [number of movies released each year](https://www.boxofficemojo.com/year/), therefore the observations are independent.
+
+#### Interpretation Of Model Coefficients
+
+```{r}
+summary(m_movies)
+```
+
+All else held constant, for each 1 minute increase in the runtime of movie, the model predicts the IMDb rating to be higher on average by 0.013.
+
+All else held constant, the model predicts that movie with genre "Documentary" have IMDb rating 1.93 higher than movie with genre "Animation" (i.e. reference level), on average.
+
+All else held constant, the model predicts that movie with genre "Art House & International" have IMDb rating 0.90 higher than movie with genre "Animation" (i.e. reference level), on average.
+
+All else held constant, the model predicts that movie with genre "Drama" have IMDb rating 0.89 higher than movie with genre "Animation" (i.e. reference level), on average.
+
+All else held constant, the model predicts that movie with MPAA rating of "G" have IMDb rating 0.93 higher than movie with MPAA rating of "PG-13" (i.e. reference level), on average.
+
+All else held constant, the model predicts that movie which the director ever won an Oscar have IMDb rating 0.41 higher than movie which the director never won an Oscar, on average.
+
+* * *
+
+## Part 5: Prediction
+
+I will pick a movie that is not in the sample and do prediction of its IMDb rating using the model I developed.
+
+I picked the movie "Captain America: Civil War", which can be found from the following URL:
+
+* https://www.imdb.com/title/tt3498820/?ref_=adv_li_tt
+
+```{r}
+movies$genre %>% unique()
+```
+
+Its genre from the website is "Action, Adventure, Sci-Fi", so I will use "Action & Adventure" as the genre for prediction.
+
+```{r}
+movies %>% 
+  filter(director %in% c('Anthony Russo', 'Joe Russo')) %>%
+  select(director, best_dir_win)
+```
+
+Neither of the 2 directors of this movie ever won as Oscar, so I will use "no" as input for best_dir_win.
+
+```{r}
+new_movie <- data.frame(genre = 'Action & Adventure'
+                        , runtime = 147
+                        , mpaa_rating = 'PG-13'
+                        , best_dir_win = 'no')
+
+predict(m_movies, new_movie, interval = 'prediction'
+        , level = 0.95)
+```
+
+The model predicts, with 95% confidence, that the movie "Captain America: Civil War" with genre "Action & Adventure", with runtime 147 minutes, with MPAA rating "PG-13", and with directors who never won an Oscar is expected to have a IMDb rating between 4.43 and 8.08. 
+
+The actual IMDb rating of this movie from the website is 7.8, which is within the prediction interval.
+
+* * *
+
+## Part 6: Conclusion
+
+Regarding the components of a popular movie, what I have found is that audience prefer watching movies with long runtime, and movies that are suitable for audience of all ages (i.e. MPAA rating "G"). The top 3 genres that audience prefer are "Documentary", followed by "Musical & Performing Arts" and "Drama". Also, audience like watching movies that are produced by directors who ever won an Oscar.
+
+The shortcoming of this study is that the model has R^2^ of 0.3071, meaning that only 30.71% of the variability of the response variable (i.e. IMDb rating) can be explained by the model.
