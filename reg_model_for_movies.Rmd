@@ -1,11 +1,11 @@
 ---
 title: "Modeling and prediction for movies"
 output:
-  pdf_document: default
   html_document:
     fig_height: 4
     highlight: pygments
     theme: spacelab
+  pdf_document: default
 ---
 
 ## Setup
@@ -104,7 +104,8 @@ From this box plot, it shows that movies which the director ever won an Oscar ha
 
 ## Part 4: Modeling
 
-#### Variables To Consider For Full Model
+
+### Variables To Consider For Full Model
 
 I will consider the following variables for the full model:
 
@@ -118,7 +119,8 @@ I will consider the following variables for the full model:
   + thtr_rel_month
   + best_dir_win
 
-#### Model Selection
+
+### Model Selection
 
 Because I am interested in knowing the components of a popular movie, I will use the p-value approach for model selection to find out which variables are significant. I will use backwards elimination as it will take shorter time than forward selection when doing the p-value approach.
 
@@ -147,7 +149,8 @@ summary(m_movies)
 
 Because all the 4 variables are significant (i.e. p-value below significance level 0.05), I will stop here.
 
-#### Model Diagnostics
+
+### Model Diagnostics
 
 I will now check whether the following conditions are met for the multiple linear regression model to be valid:
 
@@ -219,7 +222,8 @@ movies %>%
 
 The data are random sampled, and the sizes of sample without replacement each year are less than 10% of the [number of movies released each year](https://www.boxofficemojo.com/year/), therefore the observations are independent.
 
-#### Interpretation Of Model Coefficients
+
+### Interpretation Of Model Coefficients
 
 ```{r}
 summary(m_movies)
