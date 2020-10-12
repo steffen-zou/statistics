@@ -1,10 +1,11 @@
 ---
 title: "Statistical inference with the GSS data"
-output: 
-  html_document: 
+output:
+  html_document:
     fig_height: 4
     highlight: pygments
     theme: spacelab
+  pdf_document: default
 ---
 
 ## Setup
@@ -106,13 +107,13 @@ From this bar plot, it shows that there is little difference in the median famil
 
 ## Part 4: Inference
 
-#### Hypotheses
+### Hypotheses
 
 The null hypothesis is that there is no difference in the median family income in constant dollars between year 2012 and 2002.
 
 The alternative hypothesis is that there is difference in the median family income in constant dollars between year 2012 and 2002.
 
-#### Conditions For Inference
+### Conditions For Inference
 
 I will check the conditions for inference for comparing two independent medians.
 
@@ -128,7 +129,7 @@ Because random sampling is used for each year, there is no dependence between th
 
 Because the sample size for each group is greater than 30, the sampling/bootstrap distribution will be nearly normal.
 
-#### Method(s) To Be Used
+### Method(s) To Be Used
 
 I will conduct a hypothesis test to check the likelihood of the difference in the median family income to be 2012 or more extreme in either directions, if in fact that there is no difference in the median family income in constant dollars between year 2012 and 2002. I will use the default significance level of 0.05.
 
@@ -136,7 +137,7 @@ I will also calculate the 95% confidence interval to check whether the interval 
 
 Because I am using median, I can only use the simulation method.
 
-#### Hypothesis Test
+### Hypothesis Test
 
 ```{r}
 inference(y = coninc, x = year, data = family_income_2002_2012, type = 'ht'
@@ -146,7 +147,7 @@ inference(y = coninc, x = year, data = family_income_2002_2012, type = 'ht'
 
 Because the p-value of 0.6683 is greater than the significance level of 0.05, I fail to reject the null hypothesis that there is no difference in the median family income in constant dollars between year 2012 and 2002. The data does not provide convincing evidence that there is difference in the median family income in constant dollars between year 2012 and 2002. The observed difference of -2012 is simply due to chance.
 
-#### Confidence Interval
+### Confidence Interval
 
 ```{r}
 inference(y = coninc, x = year, data = family_income_2002_2012, type = 'ci'
