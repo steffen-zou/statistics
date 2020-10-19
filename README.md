@@ -11,7 +11,7 @@
         For arthritis management where doctor suggest to lose weight, what is the typical weight?
       </li>
       <li>
-        What is the top 10 types of exercise with the least percentage of people being told that they have chronic health condition?
+        What are the top 10 types of exercise with the least percentage of people being told that they have chronic health condition?
       </li>
     </ul>
   </li>
