@@ -1,11 +1,11 @@
 ---
 title: "Statistical inference with the GSS data"
 output:
+  pdf_document: default
   html_document:
     fig_height: 4
     highlight: pygments
     theme: spacelab
-  pdf_document: default
 ---
 
 ## Setup
@@ -48,7 +48,7 @@ I am interested in knowing whether households in the United States have become r
 
 ## Part 3: Exploratory data analysis
 
-```{r}
+```{r message=FALSE}
 family_income_2002_2012 <- gss %>% 
   filter(year %in% c(2002, 2012)
          , !is.na(coninc)) %>% 
@@ -88,7 +88,7 @@ It shows that the median family income has decreased by 2012.
 ggplot(data = median_fam_inc_2002_2012
        , aes(x = year, y = median_family_income)
        ) + 
-  geom_col() +
+  geom_col(fill = '#99ccff') +
   ggtitle('Median family income in year 2002 and 2012') +
   xlab('Year') +
   ylab('Median family income') +
@@ -118,7 +118,7 @@ The alternative hypothesis is that there is difference in the median family inco
 
 I will check the conditions for inference for comparing two independent medians.
 
-```{r}
+```{r message=FALSE}
 family_income_2002_2012 %>% 
   group_by(year) %>%
   summarise(n = n())
