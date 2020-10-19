@@ -108,7 +108,7 @@ chronic_cond$condition_type <-
     )
 
 ggplot(data = chronic_cond, aes(x = count, y = condition_type)) + 
-  geom_bar(stat = 'identity') +
+  geom_bar(stat = 'identity', fill = '#99ccff') +
   ggtitle('Most common chronic health condition that people have been
 told that they have') +
   xlab('Count') +
@@ -228,7 +228,7 @@ top_10_exercise_types$exercise_type <-
 ggplot(data=top_10_exercise_types
        , aes(x=percent_told_have_chronic_cond
              , y=exercise_type)) + 
-  geom_bar(stat = 'identity') + 
+  geom_bar(stat = 'identity', fill = '#99ccff') + 
   ggtitle('Top 10 types of exercise with the least percentage of people being
 told that they have chronic health condition') +
   xlab('Percent told they have chronic health condition') +
