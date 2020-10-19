@@ -51,7 +51,7 @@ Knowing about this can help us be careful to avoid getting the most common chron
 Knowing that weight will motivate us to be careful about our weight to avoid getting arthritis due to body weight.
 
 
-**Research quesion 3: What is the top 10 types of exercise with the least percentage of people being told that they have chronic health condition?**
+**Research quesion 3: What are the top 10 types of exercise with the least percentage of people being told that they have chronic health condition?**
 
 Knowing this information may motivate us to participate in one of these types of exercise.
 
@@ -172,7 +172,7 @@ ggplot(data=having_arthritis, aes(x=weight2_num)) +
 ```
 
 
-**Research quesion 3: What is the top 10 types of exercise with the least percentage of people being told that they have chronic health condition?**
+**Research quesion 3: What are the top 10 types of exercise with the least percentage of people being told that they have chronic health condition?**
 
 ```{r message=FALSE}
 brfss2013 <- brfss2013 %>% 
