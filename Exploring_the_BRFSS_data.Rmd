@@ -106,6 +106,7 @@ chronic_cond$condition_type <-
     chronic_cond$condition_type
     , levels = chronic_cond$condition_type[order(chronic_cond$count)]
     )
+
 ggplot(data = chronic_cond, aes(x = count, y = condition_type)) + 
   geom_bar(stat = 'identity') +
   ggtitle('Most common chronic health condition that people have been
@@ -142,7 +143,7 @@ From the summary statistics, it shows that the average weight for people having 
 
 I will generate a histogram so that it the outlier is more obvious shown by the limit on the X axis.
 
-```{r}
+```{r warning=FALSE}
 ggplot(data=having_arthritis, aes(x=weight2_num)) + 
   geom_histogram(binwidth = 20) + 
   ggtitle('Distribution of weights of the people having arthritis due to weight') +
@@ -161,7 +162,7 @@ So to be more accurate on the typical weight of the people who have arthritis du
 
 I will generate a histogram with limit on the X axis to exclude the outlier.
 
-```{r}
+```{r warning=FALSE}
 ggplot(data=having_arthritis, aes(x=weight2_num)) + 
   geom_histogram(binwidth = 20) + 
   ggtitle('Distribution of weights of the people having arthritis due to weight') +
@@ -173,7 +174,7 @@ ggplot(data=having_arthritis, aes(x=weight2_num)) +
 
 **Research quesion 3: What is the top 10 types of exercise with the least percentage of people being told that they have chronic health condition?**
 
-```{r}
+```{r message=FALSE}
 brfss2013 <- brfss2013 %>% 
   mutate(told_have_chronic_cond=ifelse(
                                    cvdinfr4 == 'Yes' 
@@ -197,7 +198,9 @@ exercise_and_chr_cond <- brfss2013 %>%
     , !is.na(exract11)) %>% 
   group_by(exract11) %>% 
   summarise(
-    percent_told_have_chronic_cond = sum(told_have_chronic_cond == 'Yes') / n()
+    percent_told_have_chronic_cond = round(sum(told_have_chronic_cond == 'Yes') 
+                                           / n() * 100
+                                           , 1)
     ) %>%
   rename(exercise_type = exract11) %>%
   arrange(percent_told_have_chronic_cond)
@@ -230,9 +233,9 @@ ggplot(data=top_10_exercise_types
 told that they have chronic health condition') +
   xlab('Percent told they have chronic health condition') +
   ylab('Type of exercise') +
-  geom_text(aes(label = round(percent_told_have_chronic_cond, digits = 3))
+  geom_text(aes(label = paste(percent_told_have_chronic_cond, '%', sep = ''))
             , hjust = -0.2, size = 3) +
-  scale_x_continuous(labels = NULL, lim = c(0, 0.4)) +
+  scale_x_continuous(labels = NULL, lim = c(0, 40)) +
   theme(axis.ticks = element_blank()
         , panel.grid = element_blank())
 ```
