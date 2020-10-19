@@ -1,11 +1,11 @@
 ---
 title: "Modeling and prediction for movies"
 output:
+  pdf_document: default
   html_document:
     fig_height: 4
     highlight: pygments
     theme: spacelab
-  pdf_document: default
 ---
 
 ## Setup
@@ -79,8 +79,9 @@ ggplot(data = movies, aes(x = runtime, y = imdb_rating)) +
 From this scatter plot, it shows that movies with runtime beyond 150 minutes is associated with higher IMDb rating.
 
 ```{r}
-ggplot(data = movies, aes(x = mpaa_rating, y = imdb_rating)) + 
-  geom_boxplot() +
+ggplot(data = movies, aes(x = mpaa_rating, y = imdb_rating
+                          , fill = mpaa_rating)) + 
+  geom_boxplot(show.legend = FALSE) +
   ggtitle('IMDb rating of different MPAA ratings') +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab('MPAA rating') +
@@ -90,8 +91,9 @@ ggplot(data = movies, aes(x = mpaa_rating, y = imdb_rating)) +
 From this box plot, it shows that the MPAA ratings "G" and "Unrated" have higher median IMDb rating than the other MPAA ratings.
 
 ```{r}
-ggplot(data = movies, aes(x = best_dir_win, y = imdb_rating)) + 
-  geom_boxplot() +
+ggplot(data = movies, aes(x = best_dir_win, y = imdb_rating
+                          , fill = best_dir_win)) + 
+  geom_boxplot(show.legend = FALSE) +
   ggtitle('IMDb rating of movies whether or not the director ever won an Oscar') +
   theme(plot.title = element_text(hjust = 0.5)) +
   ylab('IMDb rating') +
