@@ -115,6 +115,7 @@ told that they have') +
   ylab('Type of condition') +
   scale_x_continuous(labels = NULL
                      , lim = c(0, 180000)) +
+  theme_minimal() +
   theme(axis.ticks.x = element_blank()
         , axis.ticks.y = element_blank()
         , panel.grid = element_blank()) +
@@ -150,7 +151,8 @@ ggplot(data=having_arthritis, aes(x=weight2_num)) +
   xlab('Weight (pound)') +
   ylab('Count') +
   scale_x_continuous(labels = function(x) format(x, big.mark = ",",
-                                                       scientific = FALSE))
+                                                       scientific = FALSE)) +
+  theme_minimal()
 ```
 
 
@@ -164,11 +166,12 @@ I will generate a histogram with limit on the X axis to exclude the outlier.
 
 ```{r warning=FALSE}
 ggplot(data=having_arthritis, aes(x=weight2_num)) + 
-  geom_histogram(binwidth = 20) + 
+  geom_histogram(binwidth = 20, fill = '#99ccff') + 
   ggtitle('Distribution of weights of the people having arthritis due to weight') +
   xlab('Weight (pound)') +
   ylab('Count') +
-  scale_x_continuous(lim = c(0, 600))
+  scale_x_continuous(lim = c(0, 600)) +
+  theme_minimal()
 ```
 
 
@@ -236,6 +239,7 @@ told that they have chronic health condition') +
   geom_text(aes(label = paste(percent_told_have_chronic_cond, '%', sep = ''))
             , hjust = -0.2, size = 3) +
   scale_x_continuous(labels = NULL, lim = c(0, 40)) +
+  theme_minimal() +
   theme(axis.ticks = element_blank()
         , panel.grid = element_blank())
 ```
