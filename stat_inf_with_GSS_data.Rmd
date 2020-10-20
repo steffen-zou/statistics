@@ -97,6 +97,7 @@ ggplot(data = median_fam_inc_2002_2012
             , size = 3.3) +
   scale_y_continuous(labels = NULL
                      , lim = c(0, 38000)) +
+  theme_minimal() +
   theme(axis.ticks = element_blank()
         , panel.grid = element_blank())
 ```
