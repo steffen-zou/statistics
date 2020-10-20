@@ -88,7 +88,7 @@ It shows that the median family income has decreased by 2012.
 ggplot(data = median_fam_inc_2002_2012
        , aes(x = year, y = median_family_income)
        ) + 
-  geom_col(fill = '#99ccff') +
+  geom_col(width = 0.4, fill = '#99ccff') +
   ggtitle('Median family income in year 2002 and 2012') +
   xlab('Year') +
   ylab('Median family income') +
