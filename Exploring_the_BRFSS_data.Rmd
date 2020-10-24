@@ -166,7 +166,7 @@ I will generate a histogram with limit on the X axis to exclude the outlier.
 
 ```{r warning=FALSE}
 ggplot(data=having_arthritis, aes(x=weight2_num)) + 
-  geom_histogram(binwidth = 20, fill = '#99ccff') + 
+  geom_histogram(binwidth = 20, fill = '#99ccff', color = 'black') + 
   ggtitle('Distribution of weights of the people having arthritis due to weight') +
   xlab('Weight (pound)') +
   ylab('Count') +
