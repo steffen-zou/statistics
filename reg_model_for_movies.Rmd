@@ -69,8 +69,9 @@ From this summary statistics, it shows that the genres "Musical & Performing Art
 
 ```{r warning=FALSE}
 ggplot(data = movies, aes(x = runtime, y = imdb_rating)) + 
-  geom_jitter() +
+  geom_jitter(color = '#336699') +
   ggtitle('Relationship between runtime and IMDb rating') +
+  theme_light() +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab('Runtime') +
   ylab('IMDb rating')
@@ -169,9 +170,10 @@ filtered_movies <- movies %>%
 
 ggplot(data = filtered_movies
        , aes(x = runtime, y = m_movies$residuals)) + 
-  geom_jitter() +
+  geom_jitter(color = '#336699') +
   geom_hline(yintercept = 0, linetype = 'dashed') +
   ggtitle('Residuals vs. runtime') +
+  theme_light() +
   theme(plot.title = element_text(hjust = 0.5)) +
   ylab('Residuals')
 ```
@@ -193,9 +195,10 @@ From the histogram, it shows that the distribution has a slight skew to the left
 
 ```{r}
 ggplot(data = m_movies, aes(sample = .resid)) + 
-  stat_qq() +
+  stat_qq(shape = 1, color = '#0066cc', size = 2) +
   stat_qq_line() +
   ggtitle('Normal probability plot of residuals') +
+  theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
@@ -205,9 +208,10 @@ From the normal probability plot, other than the slight deviation at the left ta
 
 ```{r}
 ggplot(data = m_movies, aes(x = .fitted, y = .resid)) + 
-  geom_jitter() +
+  geom_jitter(color = '#336699') +
   geom_hline(yintercept = 0, linetype = 'dashed') +
   ggtitle('Residuals vs. fitted') +
+  theme_light() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
