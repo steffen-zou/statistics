@@ -95,11 +95,11 @@ ggplot(data = median_fam_inc_2002_2012
   geom_text(aes(label = format(median_family_income, big.mark = ','))
             , vjust = -0.5
             , size = 3.3) +
-  scale_y_continuous(labels = NULL
-                     , lim = c(0, 38000)) +
+  scale_y_continuous(labels = NULL) +
   theme_minimal() +
   theme(axis.ticks = element_blank()
-        , panel.grid = element_blank())
+        , panel.grid = element_blank()) +
+  coord_cartesian(ylim = c(0, 38000))
 ```
 
 From this bar plot, it shows that there is little difference in the median family income between year 2012 and 2002.
