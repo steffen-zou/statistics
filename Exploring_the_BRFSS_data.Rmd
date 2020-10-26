@@ -15,6 +15,7 @@ output:
 ```{r load-packages, message = FALSE}
 library(ggplot2)
 library(dplyr)
+library(tidyr)
 ```
 
 ### Load data
@@ -82,16 +83,9 @@ chronic_cond
 ```
 
 To make the summary statistics easier to interpret, I will rotate the table counterclockwise, and sort them by their count in descending order.
-
 ```{r}
-chronic_cond <- as.data.frame(t(chronic_cond))
-
-colnames(chronic_cond) <- c('count')
-
-chronic_cond <- chronic_cond %>% 
-  mutate(condition_type = rownames(chronic_cond)) %>% 
-  arrange(desc(count)) %>% 
-  select(condition_type, count)
+chronic_cond <- gather(chronic_cond, 'condition_type', 'count') %>%
+  arrange(desc(count))
 
 chronic_cond
 ```
@@ -113,14 +107,14 @@ ggplot(data = chronic_cond, aes(x = count, y = condition_type)) +
 told that they have') +
   xlab('Count') +
   ylab('Type of condition') +
-  scale_x_continuous(labels = NULL
-                     , lim = c(0, 180000)) +
+  scale_x_continuous(labels = NULL) +
   theme_minimal() +
   theme(axis.ticks.x = element_blank()
         , axis.ticks.y = element_blank()
         , panel.grid = element_blank()) +
   geom_text(aes(label = format(count, big.mark = ","))
-            , hjust = -0.1, size = 3)
+            , hjust = -0.1, size = 3) +
+  coord_cartesian(xlim = c(0, 180000))
 ```
 
 
@@ -170,8 +164,8 @@ ggplot(data=having_arthritis, aes(x=weight2_num)) +
   ggtitle('Distribution of weights of the people having arthritis due to weight') +
   xlab('Weight (pound)') +
   ylab('Count') +
-  scale_x_continuous(lim = c(0, 600)) +
-  theme_minimal()
+  theme_minimal() +
+  coord_cartesian(xlim = c(0, 600))
 ```
 
 
@@ -238,10 +232,11 @@ told that they have chronic health condition') +
   ylab('Type of exercise') +
   geom_text(aes(label = paste(percent_told_have_chronic_cond, '%', sep = ''))
             , hjust = -0.2, size = 3) +
-  scale_x_continuous(labels = NULL, lim = c(0, 40)) +
+  scale_x_continuous(labels = NULL) +
   theme_minimal() +
   theme(axis.ticks = element_blank()
-        , panel.grid = element_blank())
+        , panel.grid = element_blank()) +
+  coord_cartesian(xlim = c(0, 40))
 ```
 
 I will also do a summary statistics of the top 10 types of exercise with the most percentage of people being told that they have chronic health condition, so that you can compare the percentages from both statistics.
