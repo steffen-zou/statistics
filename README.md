@@ -1,4 +1,4 @@
-<a href="https://github.com/steffen-zou/statistics/blob/master/Exploring_the_BRFSS_data.Rmd">Exploring_the_BRFSS_data.Rmd</a> | <a href="https://github.com/steffen-zou/statistics/blob/master/Exploring_the_BRFSS_data.pdf">Exploring_the_BRFSS_data.pdf</a>
+<a href="https://github.com/steffen-zou/statistics/blob/master/Exploring_the_BRFSS_data.pdf">Exploring_the_BRFSS_data.pdf</a> (R Markdown: <a href="https://github.com/steffen-zou/statistics/blob/master/Exploring_the_BRFSS_data.Rmd">Exploring_the_BRFSS_data.Rmd</a>)
 
 <ul>
   <li>
@@ -17,7 +17,7 @@
   </li>
 </ul>
 
-<a href="https://github.com/steffen-zou/statistics/blob/master/stat_inf_with_GSS_data.Rmd">stat_inf_with_GSS_data.Rmd</a> | <a href="https://github.com/steffen-zou/statistics/blob/master/stat_inf_with_GSS_data.pdf">stat_inf_with_GSS_data.pdf</a>
+<a href="https://github.com/steffen-zou/statistics/blob/master/stat_inf_with_GSS_data.pdf">stat_inf_with_GSS_data.pdf</a> (R Markdown: <a href="https://github.com/steffen-zou/statistics/blob/master/stat_inf_with_GSS_data.Rmd">stat_inf_with_GSS_data.Rmd</a>)
 
 <ul>
   <li>
@@ -30,7 +30,7 @@
   </li>
 </ul>
 
-<a href="https://github.com/steffen-zou/statistics/blob/master/reg_model_for_movies.Rmd">reg_model_for_movies.Rmd</a> | <a href="https://github.com/steffen-zou/statistics/blob/master/reg_model_for_movies.pdf">reg_model_for_movies.pdf</a>
+<a href="https://github.com/steffen-zou/statistics/blob/master/reg_model_for_movies.pdf">reg_model_for_movies.pdf</a> (R Markdown: <a href="https://github.com/steffen-zou/statistics/blob/master/reg_model_for_movies.Rmd">reg_model_for_movies.Rmd</a>)
 
 <ul>
   <li>
