@@ -24,27 +24,25 @@ library(statsr)
 load("gss.Rdata")
 ```
 
-
-
-* * *
+------------------------------------------------------------------------
 
 ## Part 1: Data
 
-The [General Social Survey (GSS)](http://gss.norc.org/) gathers data on contemporary American society in order to monitor and explain trends and constants in attitudes, behaviors, and attributes. 
+The [General Social Survey (GSS)](http://gss.norc.org/) gathers data on contemporary American society in order to monitor and explain trends and constants in attitudes, behaviors, and attributes.
 
 The vast majority of GSS data is obtained in face-to-face interviews. Probability sampling (i.e. uses random sampling techniques) is used to create the sample. Because random sampling is used, the result of the analysis can be generalized to the population of interest.
 
 Because random assignment is not used, the result of the analysis cannot be used for causal inference.
 
-* * *
+------------------------------------------------------------------------
 
 ## Part 2: Research question
 
-**Is the median family income in constant dollars different between year 2012 and 2000?**
+**Is the median family income in constant dollars different between year 2012 and 2002?**
 
 I am interested in knowing whether households in the United States have become richer over a 10 years period. Because the survey data in this sample is until 2012, so my research question is over a 10 years period between 2012 and 2002.
 
-* * *
+------------------------------------------------------------------------
 
 ## Part 3: Exploratory data analysis
 
@@ -95,16 +93,15 @@ ggplot(data = median_fam_inc_2002_2012
   geom_text(aes(label = format(median_family_income, big.mark = ','))
             , vjust = -0.5
             , size = 3.3) +
-  scale_y_continuous(labels = NULL) +
-  theme_minimal() +
-  theme(axis.ticks = element_blank()
-        , panel.grid = element_blank()) +
-  coord_cartesian(ylim = c(0, 38000))
+  theme_light() +
+  theme(panel.grid = element_blank()) +
+  coord_cartesian(ylim = c(0, 40000)) +
+  scale_y_continuous(labels = function(x) format(x, big.mark = ','))
 ```
 
 From this bar plot, it shows that there is little difference in the median family income between year 2012 and 2002.
 
-* * *
+------------------------------------------------------------------------
 
 ## Part 4: Inference
 
@@ -113,7 +110,6 @@ From this bar plot, it shows that there is little difference in the median famil
 The null hypothesis is that there is no difference in the median family income in constant dollars between year 2012 and 2002.
 
 The alternative hypothesis is that there is difference in the median family income in constant dollars between year 2012 and 2002.
-
 
 ### Conditions For Inference
 
@@ -131,7 +127,6 @@ Because random sampling is used for each year, there is no dependence between th
 
 Because the sample size for each group is greater than 30, the sampling/bootstrap distribution will be nearly normal.
 
-
 ### Method(s) To Be Used
 
 I will conduct a hypothesis test to check the likelihood of the difference in the median family income to be 2012 or more extreme in either directions, if in fact that there is no difference in the median family income in constant dollars between year 2012 and 2002. I will use the default significance level of 0.05.
@@ -139,7 +134,6 @@ I will conduct a hypothesis test to check the likelihood of the difference in th
 I will also calculate the 95% confidence interval to check whether the interval contains the null value, which is a difference of 0.
 
 Because I am using median, I can only use the simulation method.
-
 
 ### Hypothesis Test
 
@@ -150,7 +144,6 @@ inference(y = coninc, x = year, data = family_income_2002_2012, type = 'ht'
 ```
 
 Because the p-value of 0.6683 is greater than the significance level of 0.05, I fail to reject the null hypothesis that there is no difference in the median family income in constant dollars between year 2012 and 2002. The data does not provide convincing evidence that there is difference in the median family income in constant dollars between year 2012 and 2002. The observed difference of -2012 is simply due to chance.
-
 
 ### Confidence Interval
 
